@@ -236,27 +236,6 @@ void Function::init3() {
 	weight[29][27] = weight[27][29] = 93 / (3 * pow(0.8, 3));
 	weight[29][18] = weight[18][29] = 73 / (3 * pow(0.9, 3));
 }
-void Function::campus_maps() {
-	int count = 0;
-	printf(" ==========================================================================\n");
-	cout << "                        ***北京邮电大学收录地点***                                " << endl;
-	cout << "                                                                   " << endl;
-	cout << "||";
-	for (int i = 0; i < building_number; i++)
-	{
-		printf("%2d、", ve[i].code);
-		cout << setiosflags(ios::left) << setw(20) << ve[i].name;
-		count++;
-		if (count == 3)
-		{
-			cout << "||" << endl;
-			count = 0;
-			cout << "||";
-		}
-	}
-	cout << endl;
-	printf(" ==========================================================================\n");
-}
 int Function::find_node(string name) {
 	for (int i = 0; i < building_number; i++)
 	{
