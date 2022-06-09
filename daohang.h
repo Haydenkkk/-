@@ -1,5 +1,11 @@
 #pragma once
 #include<string>
+#include<iostream>
+#include<stack>
+#include<windows.h>
+#include<iomanip>
+#include<time.h>
+
 using namespace std;
 
 const int MAXNUM = 100;
@@ -7,14 +13,16 @@ const int building_number = 30;
 const int INF = 9999;
 class Function {
 public:
-	void init();//³õÊ¼»¯
-	void campus_maps();//µØÍ¼È«Ã²
-	int find_node(string name);//ÕÒÎ»ÖÃ
-	void Dijkstra(int start, int end);//Dijkstra Çó×î¶ÌÂ·¾¶£¬²¢´òÓ¡³öÀ´
-	void Visiter();//ÓÎ¿ÍÏµÍ³
-	void Administrator();//¹ÜÀíÔ±ÏµÍ³
-	int path[MAXNUM][MAXNUM]; //±£´æÏÂÒ»¸ö½áµã
-	int short_path[MAXNUM][MAXNUM]; //×î¶ÌÂ·¾¶µÄ³¤¶È
+	void init1();//åˆå§‹åŒ–ï¼Œç­–ç•¥1ï¼Œæœ€çŸ­è·¯å¾„
+	void init2();//2,æœ€çŸ­æ—¶é—´
+	void init3();//3ï¼Œäº¤é€šæ··åˆ
+	void campus_maps();//åœ°å›¾å…¨è²Œ
+	int find_node(string name);//æ‰¾ä½ç½®
+	void Dijkstra(int start, int end,int);//Dijkstra æ±‚æœ€çŸ­è·¯å¾„ï¼Œå¹¶æ‰“å°å‡ºæ¥
+	void Visiter();//æ¸¸å®¢ç³»ç»Ÿ
+	void cross_bupt(int ,int);
+	int path[MAXNUM][MAXNUM]; //ä¿å­˜ä¸‹ä¸€ä¸ªç»“ç‚¹
+	int short_path[MAXNUM][MAXNUM]; //æœ€çŸ­è·¯å¾„çš„é•¿åº¦
 	struct building
 	{
 		string name;
@@ -22,6 +30,7 @@ public:
 		string information;
 	};
 	struct building ve[MAXNUM];
-	//ÁÚ½Ó¾ØÕó´æ´¢¶¥µãºÍ±ß
+	//é‚»æ¥çŸ©é˜µå­˜å‚¨é¡¶ç‚¹å’Œè¾¹
 	int weight[MAXNUM][MAXNUM] = { {0} };
+	int time[3];
 };
