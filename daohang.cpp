@@ -164,6 +164,7 @@ void Function::init1() {
 	ve[66] = { "东景观湖",66, " " };
 	ve[67] = { "教室楼S1",67, " " };
 	ve[68] = { "实验楼S2,S3",68, " " };
+	ve[69] = { "沙河校医院",68, " " };
 
 
 
@@ -243,6 +244,9 @@ void Function::init1() {
 	weight[66][68] = weight[68][66] = 139;
 	weight[66][67] = weight[67][66] = 191;
 	weight[68][67] = weight[67][68] = 144;
+	weight[69][45] = weight[45][69] = 92;
+	weight[69][54] = weight[54][69] = 55;
+	weight[69][56] = weight[56][69] = 51;
 }
 void Function::init2() {
 	//组存储相关信息
@@ -408,7 +412,7 @@ void Function::init2() {
 	ve[66] = { "东景观湖",66, " " };
 	ve[67] = { "教室楼S1",67, " " };
 	ve[68] = { "实验楼S2,S3",68, " " };
-
+	ve[69] = { "沙河校医院",68, " " };
 
 
 	weight[39][41] = weight[41][39] = 284 / (1.3 * 1);
@@ -487,6 +491,9 @@ void Function::init2() {
 	weight[66][68] = weight[68][66] = 139 / (1.3 * 1);
 	weight[66][67] = weight[67][66] = 191 / (1.3 * 1);
 	weight[68][67] = weight[67][68] = 144 / (1.3 * 1);
+	weight[69][45] = weight[45][69] = 92 / (1.3 * 1);
+	weight[69][54] = weight[54][69] = 55 / (1.3 * 1);
+	weight[69][56] = weight[56][69] = 51 / (1.3 * 1);
 }
 void Function::init3() {
 	//组存储相关信息
@@ -561,6 +568,7 @@ void Function::init3() {
 	ve[66] = { "东景观湖",66, " " };
 	ve[67] = { "教室楼S1",67, " " };
 	ve[68] = { "实验楼S2,S3",68, " " };
+	ve[69] = { "沙河校医院",68, " " };
 
 	//邻接矩阵存储 
 		//沙河校区(因施工等原因暂不计入雁南楼的相关路径连接)
@@ -642,6 +650,9 @@ void Function::init3() {
 	weight[66][68] = weight[68][66] = 139 / (3 * pow(1, 3));
 	weight[66][67] = weight[67][66] = 191 / (3 * pow(1, 3));
 	weight[68][67] = weight[67][68] = 144 / (3 * pow(1, 3));
+	weight[69][45] = weight[45][69] = 92 / (3 * pow(1, 3));
+	weight[69][54] = weight[54][69] = 55 / (3 * pow(1, 3));
+	weight[69][56] = weight[56][69] = 51 / (3 * pow(1, 3));
 
 	//校本部
 	weight[0][1] = weight[1][0] = 147 / 3;
@@ -747,10 +758,6 @@ int Function::find_node(string name) {
 void Function::Dijkstra(int start, int end, int mode) {
 	int dis[building_number];
 	int path[building_number];
-	//判断模式并初始化
-	/*if (mode == 1) this->init1();
-	else if (mode == 2) this->init2();
-	else this->init3();*/
 	cout << setiosflags(ios::fixed) << setprecision(2);
 	for (int i = 0; i < building_number; i++) //初始化dis path
 	{
@@ -895,24 +902,29 @@ void Function::Visiter() {
 		cin >> end_name;
 		j = find_node(end_name);
 	}
-	if ((i <= 38 and j >= 39) or (i >= 39 and j <= 38)) {
-		cout << "您所要去的目的点需要跨校区,";
-		if (i >= 39) {
-			cout << "您可以乘坐校车或者自行选用交通工具前往校本部...前往校外的线路如下" << endl;
-			Dijkstra(i, 39, mode);
-			cross_bupt(i, j);
-			cout << "到达后的路线选择如下： ";
-			Dijkstra(30, j, mode);
+	cout << "需要途径多个地点?\n" << "yes   no" << endl;
+	string kk; cin >> kk;
+	if (kk == "yes") place_by(i, j,mode);
+	else {
+		if ((i <= 38 and j >= 39) or (i >= 39 and j <= 38)) {
+			cout << "您所要去的目的点需要跨校区,";
+			if (i >= 39) {
+				cout << "您可以乘坐校车或者自行选用交通工具前往校本部...前往校外的线路如下" << endl;
+				Dijkstra(i, 39, mode);
+				cross_bupt(i, j);
+				cout << "到达后的路线选择如下： ";
+				Dijkstra(30, j, mode);
+			}
+			else {
+				cout << "您可以乘坐校车或者自行选用交通工具前往沙河本部...前往西门的路线如下" << endl;
+				Dijkstra(i, 30, mode);
+				cross_bupt(i, j);
+				cout << "到达后的路线选择如下： ";
+				Dijkstra(39, j, mode);
+			}
 		}
-		else {
-			cout << "您可以乘坐校车或者自行选用交通工具前往沙河本部...前往西门的路线如下" << endl;
-			Dijkstra(i, 30, mode);
-			cross_bupt(i, j);
-			cout << "到达后的路线选择如下： ";
-			Dijkstra(39, j, mode);
-		}
+		else Dijkstra(i, j, mode);
 	}
-	else Dijkstra(i, j, mode);
 }
 void Function::cross_bupt(int i, int j) {
 	SYSTEMTIME time1;
@@ -942,23 +954,23 @@ void Function::cross_bupt(int i, int j) {
 	}
 	cout << "土豪请直接打车至本部校区" << endl;
 }
-void Function::place_by(int i, int j) {
+void Function::place_by(int i, int j,int mode) {
 	int sum;
 	cout << "输入您想要途径的位置个数： ";
 	cin >> sum;
 	cout << "输入您想要途径的位置名称： " << endl;
-	vector<int> vi,path,viv;
+	vector<int> vi, path, viv;
 	vector<vector<int> > vvi;
 	viv.push_back(i);
-	for (int i = 0; i < sum; i++){
+	for (int i = 0; i < sum; i++) {
 		string tmp;
-		cin>>tmp;
+		cin >> tmp;
 		vi.push_back(find_node(tmp));
 		viv.push_back(find_node(tmp));
 	}
 	int des[MAXNUM][MAXNUM];
 	viv.push_back(j);
-	for (int i = 0; i < sum+2; i++) {
+	for (int i = 0; i < sum + 2; i++) {
 		for (int j = 0; j < sum + 2; j++) {
 			if (i == j) des[viv[i]][viv[j]] = INF;
 			else des[viv[i]][viv[j]] = get_short_path(viv[i], viv[j]);
@@ -966,31 +978,31 @@ void Function::place_by(int i, int j) {
 	}
 	perm(vi, vi.begin(), vi.end(), vvi);
 	int km = INF;
-	for (int k=0;k<vvi.size();k++)
+	for (int k = 0; k < vvi.size(); k++)
 	{
 		int tmp1 = 0;
 		int flag = 0;
-		tmp1 += des[i][vvi[k][flag ]];
+		tmp1 += des[i][vvi[k][flag]];
 		while (vvi[k].size() - flag > 1) {
 			/*tmp1 += get_short_path(vvi[k][flag], vvi[k][flag + 1]);*/
 			tmp1 += des[vvi[k][flag]][vvi[k][flag + 1]];
 			flag++;
 		}
 		tmp1 += des[vvi[k][flag]][j];
-		if (tmp1 < km) { 
-			km = tmp1; 
+		if (tmp1 < km) {
+			km = tmp1;
 			path = vvi[k];
 		}
 		else continue;
 	}
-	cout << "最短距离为" << km << "m" << endl;
-	cout << "路径为" << ve[i].name << "->";
-	for (int a = 0;a+1< path.size();a++) {
-		put_out(path[a], path[a+1]);
-		if(a+1== path.size()-1) put_out(path[a + 1], j);
+	cout << "路径为:\n\n"/* << ve[i].name << "->"*/;
+	put_out(i, path[0],mode);
+	for (int a = 0; a + 1 < path.size(); a++) {
+		put_out(path[a], path[a + 1],mode);
+		if (a + 1 == path.size() - 1) put_out(path[a + 1], j,mode);
 	}
 }
-int Function::get_short_path(int start,int end){
+int Function::get_short_path(int start, int end) {
 	int dis[building_number];
 	int path[building_number];
 	for (int i = 0; i < building_number; i++) //初始化dis path
@@ -1038,7 +1050,7 @@ int Function::get_short_path(int start,int end){
 				}
 		}
 	}
-	if (dis[end] == INF) return - 1;
+	if (dis[end] == INF) return -1;
 	else return dis[end];
 }
 void Function::perm(vector<int>& vi, vector<int>::iterator begin,
@@ -1063,7 +1075,7 @@ void Function::perm(vector<int>& vi, vector<int>::iterator begin,
 		}
 	}
 }
-void Function::put_out(int start,int end){
+void Function::put_out(int start, int end,int mode) {
 	int dis[building_number];
 	int path[building_number];
 	for (int i = 0; i < building_number; i++) //初始化dis path
@@ -1115,7 +1127,7 @@ void Function::put_out(int start,int end){
 		cout << "从" << ve[start].name << "->" << ve[end].name << "不通" << endl;
 		return;
 	}
-	else {
+	else if(mode!=3) {
 		//输出符合策略的最优解
 		int n = end;
 		stack<int> st;
@@ -1135,5 +1147,30 @@ void Function::put_out(int start,int end){
 		}
 		cout << endl;
 	}
-	
+	else {
+		int n = end;
+		stack<int> st;
+		st.push(end);
+		while (path[n] != -1)
+		{
+			st.push(path[n]);
+			n = path[n];
+		}
+		st.push(start);
+		cout << ve[st.top()].name;
+		int tmp = st.top();
+		st.pop();
+		while (!st.empty())
+		{
+			if ((tmp == 11 and (st.top() == 12 or st.top() == 17)) or (tmp == 12 and st.top() == 17) or (tmp == 5 and st.top() == 6) or (tmp == 9 and st.top() == 10)) {
+				cout << "->(步行)" << ve[st.top()].name;
+			}
+			else {
+				cout << "->(自行车)" << ve[st.top()].name;
+			}
+			tmp = st.top();
+			st.pop();
+		}
+		cout << endl;
+	}
 }
